@@ -67,7 +67,7 @@ function useCommonVue() {
     }
     const oldTheme = localStorage.getItem('theme');
     localStorage.setItem('theme', themeId);
-    
+
     const event = new StorageEvent('storage', {
       key: 'theme',
       oldValue: oldTheme,
@@ -75,7 +75,7 @@ function useCommonVue() {
       url: window.location.href
     });
     window.dispatchEvent(event);
-    
+
     closeThemeModal();
   };
 
@@ -154,10 +154,10 @@ function useCommonVue() {
 
 const headerItemsConfig = [
   {
-    id:'slider',
-    name :'',
-    href:'#',
-    icon:'bi-sliders'
+    id: 'slider',
+    name: '',
+    href: '#',
+    icon: 'bi-sliders'
   },
   {
     id: 'home',
@@ -166,16 +166,16 @@ const headerItemsConfig = [
     icon: 'bi-stack-overflow'
   },
   {
-    id:'setting',
-    name :'设置',
-    href:'#',
-    icon:'bi-gear'
+    id: 'setting',
+    name: '设置',
+    href: '#',
+    icon: 'bi-gear'
   },
   {
-    id:'github',
-    name :'GitHub',
-    href:'#',
-    icon:'bi-github'
+    id: 'github',
+    name: 'GitHub',
+    href: '#',
+    icon: 'bi-github'
   }
 ];
 
@@ -342,12 +342,12 @@ const sidebarItemsConfig = [
 const footerItemsConfig = [
   {
     id: 'copyright',
-    text: 'Copyright &copy;SuzakuHyperDry',
+    text: 'Copyright &copy; <a href="https://github.com/Suzaku-Hyper-Dry">github</a>&<a href="https://gitee.com/Suzakuhyperdry">Gitee</a>:SuzakuHyperDry',
     divider: true
   },
   {
     id: 'school',
-    text: '青岛滨海学院',
+    text: '内容勘误：suzakuhyperdry@163.com',
     divider: false
   }
 ];

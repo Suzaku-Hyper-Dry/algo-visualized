@@ -15,13 +15,13 @@
 
 ### 排序算法演示
 
-![排序算法可视化](./screenshots/sort-demo.png)
+![排序算法可视化](./static/showImg/codeEg.png,./static/showImg/VisualizedEg.png)
 
 > 冒泡排序可视化演示 - 展示排序过程动画、代码高亮和多语言切换
 
 ### 主题切换
 
-![主题切换](./screenshots/theme-demo.png)
+![主题切换](./static/showImg/themeDemo.png)
 
 > 支持亮色/暗色主题切换，适配不同使用场景
 
