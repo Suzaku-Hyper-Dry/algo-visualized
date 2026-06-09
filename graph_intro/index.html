@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图论部分简介</title>
+  <link rel="stylesheet" href="../static/bootstrap-5.3.8-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="../static/bootstrap-icons-1.13.1/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="../static/css/common.css">
+
+</head>
+
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <nav class="navbar px-4 py-2">
+        <div class="container-fluid px-0">
+          <ul class="navbar-nav flex-row align-items-center gap-3">
+            <template v-for="item in headerItems" :key="item.id">
+              <li class="nav-item" v-if="item.id === 'slider' && item.show">
+                <button class="nav-link p-0 border-0 bg-transparent" @click="toggleSidebar" :title="item.name || '菜单'">
+                  <i class="bi" :class="item.icon + ' fs-4'"></i>
+                </button>
+              </li>
+
+              <li class="nav-item" v-else-if="item.id === 'home' && item.show">
+                <a :href="item.href" class="nav-link d-flex align-items-center gap-2 px-0">
+                  <i class="bi text-info" :class="item.icon + ' fs-4'"></i>
+                  <span class="fw-semibold">{{ headerTitle }}</span>
+                </a>
+              </li>
+            </template>
+          </ul>
+
+          <ul class="navbar-nav flex-row align-items-center gap-3">
+            <template v-for="item in headerItems.slice(2)" :key="item.id">
+              <li class="nav-item" v-if="item.id === 'setting'">
+                <button class="nav-link p-0 border-0 bg-transparent" @click="openThemeModal" :title="item.name">
+                  <i class="bi" :class="item.icon + ' fs-4'"></i>
+                </button>
+              </li>
+              <li class="nav-item" v-else-if="item.show">
+                <a :href="item.href" class="nav-link px-0" :title="item.name">
+                  <i class="bi" :class="item.icon + ' fs-4'"></i>
+                </a>
+              </li>
+            </template>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="tabs">
+      <div class="px-4">
+        <ul class="nav nav-tabs border-0">
+          <template v-for="item in navItems" :key="item.id">
+            <li class="nav-item">
+              <a :href="item.href" class="nav-link rounded-0" :class="{ 'active': isActiveNav(item.href) }">
+                {{ item.name }}
+              </a>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-lg g-0 d-flex" style="min-height: calc(100vh - 130px);">
+      <!-- Sidebar Overlay -->
+      <div class="sidebar-overlay" :class="{ 'sidebar-overlay--visible': !sidebarHidden }" @click="toggleSidebar"></div>
+
+      <!-- Sidebar -->
+      <aside class="sidebar flex-shrink-0" :class="{ 'sidebar--open': !sidebarHidden }">
+        <nav class="p-2">
+          <ul class="list-group list-group-flush">
+            <template v-for="item in sidebarItems" :key="item.id">
+              <li class="list-group-item border-0 px-3">
+                <template v-if="item.children">
+                  <div class="d-flex justify-content-between align-items-center" @click="toggleNav(item)"
+                    style="cursor: pointer;">
+                    <span>{{ item.name }}</span>
+                    <i class="bi bi-chevron-right" :class="{ 'rotate-90': item.expanded }"></i>
+                  </div>
+                  <ul v-if="item.expanded" class="list-group list-group-flush mt-2 ms-3 border-start ps-2 rounded-0">
+                    <template v-for="child in item.children" :key="child.id">
+                      <li class="list-group-item border-0 py-1 px-2" style="font-size: 14px;">
+                        <template v-if="child.children">
+                          <div class="d-flex justify-content-between align-items-center" @click="toggleNav(child)"
+                            style="cursor: pointer;">
+                            <span>{{ child.name }}</span>
+                            <i class="bi bi-chevron-right small" :class="{ 'rotate-90': child.expanded }"></i>
+                          </div>
+                          <ul v-if="child.expanded"
+                            class="list-group list-group-flush mt-1 ms-3 border-start ps-2 rounded-0">
+                            <li class="list-group-item border-0 py-1 px-2" v-for="subChild in child.children"
+                              :key="subChild.id" style="font-size: 13px;">
+                              <a :href="subChild.href" class="text-decoration-none d-block"
+                                :class="{ 'fw-semibold link-primary': isActiveNav(subChild.href) }">
+                                {{ subChild.name }}
+                              </a>
+                            </li>
+                          </ul>
+                        </template>
+                        <a v-else :href="child.href" class="text-decoration-none d-block"
+                          :class="{ 'fw-semibold link-primary': isActiveNav(child.href) }">
+                          {{ child.name }}
+                        </a>
+                      </li>
+                    </template>
+                  </ul>
+                </template>
+                <a v-else :href="item.href" class="text-decoration-none d-block"
+                  :class="{ 'fw-semibold link-primary': isActiveNav(item.href) }">
+                  {{ item.name }}
+                </a>
+              </li>
+            </template>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- Content -->
+      <main class="main flex-fill p-4 overflow-auto">
+        <div class="mx-auto" style="max-width: 48rem;">
+          <article>
+            <h1>图论部分简介</h1>
+            <p>图论是数学和计算机科学的一个重要分支，研究图的性质和算法。在程序设计竞赛中，图论是必考的知识点之一。</p>
+
+            <h2>代码实现</h2>
+            <div class="code-block">
+              <div class="code-block__header">
+                <div class="code-block__tabs">
+                  <button class="code-block__tab" :class="{ 'code-block__tab--active': currentLang === 'cpp' }"
+                    @click="changeLanguage('cpp')">C++</button>
+                  <button class="code-block__tab" :class="{ 'code-block__tab--active': currentLang === 'java' }"
+                    @click="changeLanguage('java')">Java</button>
+                  <button class="code-block__tab" :class="{ 'code-block__tab--active': currentLang === 'python' }"
+                    @click="changeLanguage('python')">Python</button>
+                </div>
+                <button class="code-block__copy" :class="{ 'code-block__copy--copied': copySuccess }" @click="copyCode">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  <span>{{ copySuccess ? '已复制' : '复制代码' }}</span>
+                </button>
+              </div>
+              <div class="code-block__content">
+                <div id="monaco-editor" style="width: 100%; height: 400px;"></div>
+              </div>
+            </div>
+
+            <h2>图的基本概念</h2>
+            <p>图由顶点（vertex）和边（edge）组成。顶点通常用数字或字母标识，边表示顶点之间的关系。</p>
+
+            <h2>图的分类</h2>
+            <ul>
+              <li><strong>有向图</strong>：边有方向，如社交网络中的关注关系</li>
+              <li><strong>无向图</strong>：边没有方向，如朋友关系</li>
+              <li><strong>加权图</strong>：边带有权重，如地图中的距离</li>
+              <li><strong>连通图</strong>：任意两点之间都有路径</li>
+            </ul>
+
+            <h2>常见的图论算法</h2>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>算法</th>
+                    <th>类型</th>
+                    <th>时间复杂度</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><a href="sp/dijkstra.html">Dijkstra 算法</a></td>
+                    <td>单源最短路径</td>
+                    <td>O((V+E)log V)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2>学习路径建议</h2>
+            <p>推荐学习顺序：</p>
+            <ol>
+              <li>图的基本概念 → 理解顶点、边、邻接表</li>
+              <li>DFS/BFS → 理解图的遍历</li>
+              <li>最短路算法 → 理解 Dijkstra、Floyd</li>
+              <li>最小生成树 → 理解 Kruskal、Prim</li>
+            </ol>
+          </article>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer py-4">
+      <div class="text-center" style="color: var(--text-lighter); font-size: 13px;">
+        <template v-for="(item, index) in footerItems" :key="item.id">
+          <span v-html="item.text"></span>
+          <span class="mx-2" v-if="index < footerItems.length - 1">|</span>
+        </template>
+      </div>
+    </footer>
+
+    <!-- Back to Top -->
+    <button class="back-top" :class="{ 'back-top--visible': showBackTop }" @click="scrollToTop"
+      style="position: fixed; bottom: 24px; right: 24px; z-index: 50;">
+      <i class="bi bi-arrow-up fs-4 text-white"></i>
+    </button>
+
+    <!-- Theme Modal -->
+    <div class="modal fade" :class="{ 'show': showThemeModal }" tabindex="-1"
+      :style="{ display: showThemeModal ? 'block' : 'none' }" @click.self="closeThemeModal">
+      <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header">
+            <h5 class="modal-title fw-semibold">选择配色主题</h5>
+            <button type="button" class="btn-close" @click="closeThemeModal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row g-2">
+              <div v-for="theme in themeOptions" :key="theme.id" class="col-6">
+                <div class="card text-center h-100" :class="{ 'border-primary border-2': currentTheme === theme.id }"
+                  @click="selectTheme(theme.id)" style="cursor: pointer;">
+                  <div class="card-body py-3 px-2">
+                    <div class="d-flex justify-content-center mb-2">
+                      <div class="d-flex rounded-circle overflow-hidden" style="width: 48px; height: 48px;">
+                        <div class="flex-fill" :style="{ backgroundColor: theme.colors[0] }"></div>
+                        <div class="flex-fill" :style="{ backgroundColor: theme.colors[1] }"></div>
+                        <div class="flex-fill" :style="{ backgroundColor: theme.colors[2] }"></div>
+                      </div>
+                    </div>
+                    <span class="fw-medium" style="font-size: 14px;">{{ theme.name }}</span>
+                    <i v-if="currentTheme === theme.id" class="bi bi-check-circle-fill text-primary ms-1"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-backdrop fade" :class="{ 'show': showThemeModal }"
+      :style="{ display: showThemeModal ? 'block' : 'none' }"></div>
+  </div>
+
+
+  <!-- Vue 3 -->
+  <script src="../static/vue/vue.global.prod.js"></script>
+
+  <!-- Common Vue Module -->
+  <script src="../static/js/common-vue.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const { createApp, ref } = Vue;
+      const { useCommonVue, headerItemsConfig, navItemsConfig, sidebarItemsConfig, footerItemsConfig, themeOptionsConfig } = window.AlgoCommonVue;
+
+      createApp({
+        setup() {
+          const {
+            sidebarHidden,
+            showBackTop,
+            headerTitle,
+            showThemeModal,
+            currentTheme,
+            toggleSidebar,
+            scrollToTop,
+            toggleNav,
+            openThemeModal,
+            closeThemeModal,
+            selectTheme
+          } = useCommonVue();
+
+          const currentPath = window.location.pathname;
+          const currentFileName = currentPath.split('/').pop();
+          const headerItems = ref(JSON.parse(JSON.stringify(headerItemsConfig)));
+          const navItems = ref(JSON.parse(JSON.stringify(navItemsConfig)));
+          const sidebarItems = ref(JSON.parse(JSON.stringify(sidebarItemsConfig)));
+          const footerItems = ref(JSON.parse(JSON.stringify(footerItemsConfig)));
+          const themeOptions = ref(themeOptionsConfig);
+
+          headerItems.value.forEach(item => {
+            item.href = item.href.replace(/\.\.\/\.\.\//g, '');
+            item.icon = item.icon.replace(/\.\.\/\.\.\//g, '');
+            if (item.show === undefined) item.show = true;
+          });
+
+          navItems.value.forEach(item => {
+            item.href = item.href.replace('../../', '');
+          });
+
+          sidebarItems.value.forEach(item => {
+            if (item.children) {
+              item.expanded = item.children.some(child => currentPath.includes(child.id));
+            }
+          });
+
+          footerItems.value.forEach(item => {
+            item.text = item.text.replace('../../', '');
+          });
+
+
+          const isActiveNav = (href) => {
+            if (!href) return false;
+            const hrefParts = href.split('/').filter(p => p && p !== '.' && p !== '..');
+            const currentParts = currentPath.split('/').filter(p => p && p !== '.' && p !== '..');
+
+            const hrefTail = hrefParts.slice(-2).join('/');
+            const currentTail = currentParts.slice(-2).join('/');
+
+            return currentTail === hrefTail;
+          };
+
+          return {
+            sidebarHidden,
+            showBackTop,
+            headerTitle,
+            sidebarItems,
+            navItems,
+            footerItems,
+            currentPath,
+            headerItems,
+            themeOptions,
+            showThemeModal,
+            currentTheme,
+            isActiveNav,
+            toggleSidebar,
+            toggleNav,
+            scrollToTop,
+            openThemeModal,
+            closeThemeModal,
+            selectTheme
+          };
+        }
+      }).mount('#app');
+    });
+  </script>
+</body>
+
+</html>
