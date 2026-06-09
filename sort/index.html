@@ -263,7 +263,7 @@
       <div class="text-center" style="color: var(--text-lighter); font-size: 13px;">
         <template v-for="(item, index) in footerItems" :key="item.id">
           <span v-html="item.text"></span>
-          <span class="mx-2" v-if="index < footerItems.length - 1">|</span>
+          <span class="mx-2" v-if="index !== footerItems.length - 1">|</span>
         </template>
       </div>
     </footer>

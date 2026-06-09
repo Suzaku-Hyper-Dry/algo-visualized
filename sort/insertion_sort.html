@@ -208,7 +208,7 @@
                         </div>
                         <button class="control-btn btn-primary" @click="startRun">开始</button>
                           <button class="control-btn btn-secondary" @click="nextStep"
-                            :disabled="isAuto || runFlag">下一步</button>
+                            :disabled="!canNextStep()">下一步</button>
                             <button class="control-btn btn-danger" @click="resetAll">重置</button>
                             <button class="control-btn btn-success" @click="shuffleArr">打乱</button>
                             <div class="control-group">
@@ -296,48 +296,16 @@
   <script src="../static/js/common-vue.js"></script>
 
   <!-- Monaco Editor Wrapper Module -->
-  <script src="../static/js/monaco-wrapper.js"></script>
+  <script src="../static/js/monaco-editor.js.js"></script>
+
   <!-- Sort Visualizer Module -->
-  <script src="../static/js/sort-visualizer.js"></script>
+  <script src="../static/js/sort/sort-visualizer.js"></script>
+
+  <!-- Sort Code Library -->
+  <script src="../static/js/sort/sort-code.js"></script>
 
   <script>
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
-    
-    const insertionSortCode = {
-      cpp: `void insertionSort(int arr[], int n) {
-    for (int i = 1; i < n; i++) {
-        int key = arr[i];
-        int j = i - 1;
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j--;
-        }
-        arr[j + 1] = key;
-    }
-}`,
-      java: `public static void insertionSort(int[] arr) {
-    int n = arr.length;
-    for (int i = 1; i < n; i++) {
-        int key = arr[i];
-        int j = i - 1;
-        while (j >= 0 && arr[j] > key) {
-            arr[j + 1] = arr[j];
-            j--;
-        }
-        arr[j + 1] = key;
-    }
-}`,
-      python: `def insertion_sort(arr):
-    n = len(arr)
-    for i in range(1, n):
-        key = arr[i]
-        j = i - 1
-        while j >= 0 and arr[j] > key:
-            arr[j + 1] = arr[j]
-            j -= 1
-        arr[j + 1] = key
-    return arr`
-    };
 
     document.addEventListener('DOMContentLoaded', function () {
       const { createApp, ref, onMounted, watch } = Vue;
@@ -400,7 +368,7 @@
           const changeLanguage = (lang) => {
             currentLang.value = lang;
             if (editorModule) {
-              editorModule.changeLanguage(lang, insertionSortCode[lang]);
+              editorModule.changeLanguage(lang, window.SortCodeLibrary.insertionSort[lang]);
             }
           };
 
@@ -414,6 +382,12 @@
             if (visualizerModule) {
               visualizerModule.shuffleArr();
             }
+          };
+
+          const canNextStep = () => {
+            if (isAuto.value) return false;
+            if (!visualizerModule) return false;
+            return visualizerModule.hasNextStep();
           };
 
           const resetAll = () => {
@@ -461,7 +435,7 @@
             require(['vs/editor/editor.main'], function () {
               editorModule = window.MonacoEditor.init({
                 containerId: 'monaco-editor',
-                code: insertionSortCode.cpp,
+                code: window.SortCodeLibrary.insertionSort.cpp,
                 language: 'cpp',
                 copySuccess: copySuccess
               });
@@ -506,12 +480,12 @@
             shuffleArr,
             resetAll,
             startRun,
-            nextStep
+            nextStep,
+            canNextStep
           };
         }
       }).mount('#app');
     });
   </script>
 </body>
-
 </html>

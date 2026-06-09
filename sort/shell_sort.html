@@ -206,7 +206,7 @@
                         </div>
                         <button class="control-btn btn-primary" @click="startRun">开始</button>
                           <button class="control-btn btn-secondary" @click="nextStep"
-                            :disabled="isAuto || runFlag">下一步</button>
+                            :disabled="!canNextStep()">下一步</button>
                             <button class="control-btn btn-danger" @click="resetAll">重置</button>
                             <button class="control-btn btn-success" @click="shuffleArr">打乱</button>
                             <div class="control-group">
@@ -294,53 +294,16 @@
   <script src="../static/js/common-vue.js"></script>
 
   <!-- Monaco Editor Wrapper Module -->
-  <script src="../static/js/monaco-wrapper.js"></script>
+  <script src="../static/js/monaco-editor.js.js"></script>
+
   <!-- Sort Visualizer Module -->
-  <script src="../static/js/sort-visualizer.js"></script>
+  <script src="../static/js/sort/sort-visualizer.js"></script>
+
+  <!-- Sort Code Library -->
+  <script src="../static/js/sort/sort-code.js"></script>
 
   <script>
     require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
-    
-    const shellSortCode = {
-      cpp: `void shellSort(int arr[], int n) {
-    for (int gap = n / 2; gap > 0; gap /= 2) {
-        for (int i = gap; i < n; i++) {
-            int temp = arr[i];
-            int j;
-            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-                arr[j] = arr[j - gap];
-            }
-            arr[j] = temp;
-        }
-    }
-}`,
-      java: `public static void shellSort(int[] arr) {
-    int n = arr.length;
-    for (int gap = n / 2; gap > 0; gap /= 2) {
-        for (int i = gap; i < n; i++) {
-            int temp = arr[i];
-            int j;
-            for (j = i; j >= gap && arr[j - gap] > temp; j -= gap) {
-                arr[j] = arr[j - gap];
-            }
-            arr[j] = temp;
-        }
-    }
-}`,
-      python: `def shell_sort(arr):
-    n = len(arr)
-    gap = n // 2
-    while gap > 0:
-        for i in range(gap, n):
-            temp = arr[i]
-            j = i
-            while j >= gap and arr[j - gap] > temp:
-                arr[j] = arr[j - gap]
-                j -= gap
-            arr[j] = temp
-        gap //= 2
-    return arr`
-    };
 
     document.addEventListener('DOMContentLoaded', function () {
       const { createApp, ref, onMounted, watch } = Vue;
@@ -403,7 +366,7 @@
           const changeLanguage = (lang) => {
             currentLang.value = lang;
             if (editorModule) {
-              editorModule.changeLanguage(lang, shellSortCode[lang]);
+              editorModule.changeLanguage(lang, window.SortCodeLibrary.shellSort[lang]);
             }
           };
 
@@ -417,6 +380,12 @@
             if (visualizerModule) {
               visualizerModule.shuffleArr();
             }
+          };
+
+          const canNextStep = () => {
+            if (isAuto.value) return false;
+            if (!visualizerModule) return false;
+            return visualizerModule.hasNextStep();
           };
 
           const resetAll = () => {
@@ -464,7 +433,7 @@
             require(['vs/editor/editor.main'], function () {
               editorModule = window.MonacoEditor.init({
                 containerId: 'monaco-editor',
-                code: shellSortCode.cpp,
+                code: window.SortCodeLibrary.shellSort.cpp,
                 language: 'cpp',
                 copySuccess: copySuccess
               });
@@ -509,12 +478,12 @@
             shuffleArr,
             resetAll,
             startRun,
-            nextStep
+            nextStep,
+            canNextStep
           };
         }
       }).mount('#app');
     });
   </script>
 </body>
-
 </html>

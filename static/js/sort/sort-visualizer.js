@@ -1,4 +1,3 @@
-// 排序可视化独立模块
 window.SortVisualizer = {
   init: function(options = {}) {
     const { 
@@ -11,7 +10,11 @@ window.SortVisualizer = {
     const canvasEl = canvas || document.querySelector('canvas');
     const ctx = canvasEl ? canvasEl.getContext('2d') : null;
     
-    let arr = [64, 34, 25, 12, 22, 11, 90, 45, 78, 33];
+    const getRandomArray = (length = 10, min = 1, max = 15) => {
+      return Array.from({ length }, () => Math.floor(Math.random() * (max - min + 1)) + min);
+    };
+    
+    let arr = getRandomArray();
     let sortedIdx = [];
     let comparing = [-1, -1];
     let runFlag = false;
@@ -19,6 +22,7 @@ window.SortVisualizer = {
     let currentSpeed = speed;
     let currentIsAuto = isAuto;
     let sortedCountRef = sortedCount;
+    let currentAlgorithm = 'bubble_sort'; // 当前算法名称
     
     // 冒泡排序步骤生成器
     function* bubbleSortSteps(arr) {
@@ -294,6 +298,9 @@ window.SortVisualizer = {
       for (let i = 0; i < n; i++) {
         arr[i] = output[i];
       }
+      
+      comparing = [-1, -1];
+      yield { arr: [...arr], comparing: [...comparing], sorted: [...sortedIdx] };
     }
     
     const drawArray = () => {
@@ -339,7 +346,7 @@ window.SortVisualizer = {
     };
     
     const resetAll = () => {
-      arr = [64, 34, 25, 12, 22, 11, 90, 45, 78, 33];
+      arr = getRandomArray();
       sortedIdx = [];
       comparing = [-1, -1];
       runFlag = false;
@@ -348,13 +355,68 @@ window.SortVisualizer = {
         sortedCountRef.value = 0;
       }
       drawArray();
+      
+      // 如果是单步模式，自动重新生成步骤队列
+      if (!currentIsAuto) {
+        const stepsMap = {
+          'bubble_sort': bubbleSortSteps,
+          'selection_sort': selectionSortSteps,
+          'insertion_sort': insertionSortSteps,
+          'shell_sort': shellSortSteps,
+          'quick_sort': () => quickSortSteps([...arr], 0, arr.length - 1),
+          'merge_sort': () => mergeSortSteps(arr, 0, arr.length - 1),
+          'heap_sort': heapSortSteps,
+          'radix_sort': radixSortSteps
+        };
+        
+        const stepGenerator = stepsMap[currentAlgorithm] ? stepsMap[currentAlgorithm]([...arr]) : bubbleSortSteps([...arr]);
+        
+        for (let step of stepGenerator) {
+          stepQueue.push(step);
+        }
+      }
     };
     
     const startRun = async (algorithm = 'bubble_sort') => {
       if (runFlag) return;
       
-      resetAll();
+      currentAlgorithm = algorithm; // 保存当前算法名称
       runFlag = true;
+      
+      // 单步模式：基于当前数组生成步骤，不重新生成数组
+      if (!currentIsAuto) {
+        // 重置状态但保持当前数组
+        sortedIdx = [];
+        comparing = [-1, -1];
+        stepQueue = [];
+        if (sortedCountRef && typeof sortedCountRef === 'object' && 'value' in sortedCountRef) {
+          sortedCountRef.value = 0;
+        }
+        drawArray();
+        
+        const stepsMap = {
+          'bubble_sort': bubbleSortSteps,
+          'selection_sort': selectionSortSteps,
+          'insertion_sort': insertionSortSteps,
+          'shell_sort': shellSortSteps,
+          'quick_sort': () => quickSortSteps([...arr], 0, arr.length - 1),
+          'merge_sort': () => mergeSortSteps(arr, 0, arr.length - 1),
+          'heap_sort': heapSortSteps,
+          'radix_sort': radixSortSteps
+        };
+        
+        const stepGenerator = stepsMap[algorithm] ? stepsMap[algorithm]([...arr]) : bubbleSortSteps([...arr]);
+        
+        for (let step of stepGenerator) {
+          stepQueue.push(step);
+        }
+        runFlag = false;
+        return;
+      }
+      
+      // 自动模式：重置数组并执行
+      resetAll();
+      runFlag = true; // 重新设置 runFlag，因为 resetAll 会将其置为 false
       
       const stepsMap = {
         'bubble_sort': bubbleSortSteps,
@@ -369,6 +431,7 @@ window.SortVisualizer = {
       
       const stepGenerator = stepsMap[algorithm] ? stepsMap[algorithm]([...arr]) : bubbleSortSteps([...arr]);
       
+      // 自动模式：逐步执行
       for (let step of stepGenerator) {
         if (!runFlag) break;
         
@@ -380,18 +443,10 @@ window.SortVisualizer = {
         }
         drawArray();
         
-        if (currentIsAuto) {
-          await new Promise(resolve => setTimeout(resolve, currentSpeed));
-        } else {
-          stepQueue.push(step);
-          runFlag = false;
-          break;
-        }
+        await new Promise(resolve => setTimeout(resolve, currentSpeed));
       }
       
-      if (currentIsAuto) {
-        runFlag = false;
-      }
+      runFlag = false;
     };
     
     const nextStep = () => {
@@ -413,6 +468,40 @@ window.SortVisualizer = {
     
     const setAuto = (auto) => {
       currentIsAuto = auto;
+      
+      // 如果切换到单步模式，自动生成步骤队列
+      if (!auto) {
+        // 重置状态但保持当前数组
+        sortedIdx = [];
+        comparing = [-1, -1];
+        stepQueue = [];
+        if (sortedCountRef && typeof sortedCountRef === 'object' && 'value' in sortedCountRef) {
+          sortedCountRef.value = 0;
+        }
+        drawArray();
+        
+        // 使用当前算法生成步骤
+        const stepsMap = {
+          'bubble_sort': bubbleSortSteps,
+          'selection_sort': selectionSortSteps,
+          'insertion_sort': insertionSortSteps,
+          'shell_sort': shellSortSteps,
+          'quick_sort': () => quickSortSteps([...arr], 0, arr.length - 1),
+          'merge_sort': () => mergeSortSteps(arr, 0, arr.length - 1),
+          'heap_sort': heapSortSteps,
+          'radix_sort': radixSortSteps
+        };
+        
+        const stepGenerator = stepsMap[currentAlgorithm] ? stepsMap[currentAlgorithm]([...arr]) : bubbleSortSteps([...arr]);
+        
+        for (let step of stepGenerator) {
+          stepQueue.push(step);
+        }
+      }
+    };
+    
+    const hasNextStep = () => {
+      return stepQueue.length > 0;
     };
     
     // 初始化
@@ -424,7 +513,8 @@ window.SortVisualizer = {
       startRun,
       nextStep,
       setSpeed,
-      setAuto
+      setAuto,
+      hasNextStep
     };
   }
 };
