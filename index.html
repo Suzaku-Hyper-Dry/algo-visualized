@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AlgoVisualized</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <title>AlgoVisualized - 算法可视化学习平台</title>
+  <link rel="stylesheet" href="static/bootstrap-5.3.8-dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/bootstrap-icons-1.13.1/bootstrap-icons.min.css">
   <style>
     * {
       margin: 0;
@@ -16,18 +16,19 @@
 
     body {
       min-height: 100vh;
-      overflow: hidden;
       background: #050510;
-      color: #fff;
+      color: #e0e0e0;
+      overflow-x: hidden;
     }
 
+    /* ========== Particle Background ========== */
     .particle-bg {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
+      z-index: 0;
       pointer-events: none;
     }
 
@@ -44,166 +45,393 @@
         transform: translate(0, 0);
         opacity: 0.2;
       }
-
       50% {
         opacity: 0.8;
       }
-
       100% {
         transform: translate(var(--tx), var(--ty));
         opacity: 0.1;
       }
     }
 
+    /* ========== Navbar ========== */
+    .navbar-custom {
+      position: relative;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      background: rgba(5, 5, 16, 0.75) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .navbar-custom .nav-link {
+      color: rgba(255, 255, 255, 0.75) !important;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .navbar-custom .nav-link:hover {
+      color: #4facfe !important;
+    }
+
+    .navbar-brand-custom {
+      font-weight: 700;
+      font-size: 1.3rem;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ========== Hero ========== */
+    .hero-section {
+      position: relative;
+      z-index: 5;
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 20px 60px;
+    }
+
+    .hero-title {
+      font-size: clamp(1.4rem, 5vw, 3rem);
+      font-weight: 300;
+      line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+
     .cursor {
       display: inline-block;
       width: 3px;
-      height: 1.2em;
-      background-color: #fff;
+      height: 1.1em;
+      background: #4facfe;
       margin-left: 4px;
       animation: blink 0.8s steps(2, start) infinite;
       vertical-align: middle;
     }
 
     @keyframes blink {
-      to {
-        visibility: hidden;
-      }
+      to { visibility: hidden; }
     }
 
-    .main-title {
-      font-size: clamp(1.2rem, 4vw, 2.8rem);
-      white-space: nowrap;
+    .hero-subtitle {
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 1.05rem;
+      max-width: 540px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
     }
 
-    .type-text {
-      display: inline;
+    .btn-hero-primary {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      border: none;
+      border-radius: 50px;
+      padding: 12px 36px;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #fff;
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    .type-break {
-      display: none;
+    .btn-hero-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(79, 172, 254, 0.35);
+      color: #fff;
     }
 
-    #typeText {
-      white-space: pre-line;
+    .btn-hero-outline {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 50px;
+      padding: 12px 36px;
+      font-weight: 500;
+      font-size: 1rem;
+      color: #ddd;
+      transition: all 0.2s;
     }
 
+    .btn-hero-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.4);
+      color: #fff;
+    }
+
+    /* ========== Module Cards ========== */
+    .modules-section {
+      position: relative;
+      z-index: 5;
+      padding: 40px 20px 80px;
+    }
+
+    .section-title {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.45);
+      margin-bottom: 3rem;
+      font-size: 0.95rem;
+    }
+
+    .module-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 28px 22px;
+      height: 100%;
+      transition: transform 0.25s, border-color 0.25s, background 0.25s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .module-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(79, 172, 254, 0.4);
+      background: rgba(255, 255, 255, 0.07);
+      color: inherit;
+    }
+
+    .module-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .module-card h5 {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #f0f0f0;
+    }
+
+    .module-card p {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 0;
+      line-height: 1.5;
+    }
+
+    .icon-sort      { background: rgba(79, 172, 254, 0.18); color: #4facfe; }
+    .icon-ds        { background: rgba(34, 197, 94, 0.18);  color: #22c55e; }
+    .icon-search    { background: rgba(245, 158, 11, 0.18); color: #f59e0b; }
+    .icon-dp        { background: rgba(168, 85, 247, 0.18); color: #a855f7; }
+    .icon-graph     { background: rgba(239, 68, 68, 0.18);  color: #ef4444; }
+    .icon-string    { background: rgba(236, 72, 153, 0.18); color: #ec4899; }
+
+    /* ========== Stats / Tags ========== */
+    .tech-tags {
+      position: relative;
+      z-index: 5;
+      text-align: center;
+      padding-bottom: 60px;
+    }
+
+    .tech-tag {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      padding: 6px 20px;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 4px 6px;
+    }
+
+    /* ========== Footer ========== */
+    .site-footer {
+      position: relative;
+      z-index: 5;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 24px 0;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 0.85rem;
+    }
+
+    .site-footer a {
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+    }
+
+    .site-footer a:hover {
+      color: #4facfe;
+    }
+
+    /* ========== Responsive ========== */
     @media (max-width: 768px) {
-      .main-title {
-        font-size: clamp(1rem, 5vw, 1.5rem);
+      .hero-title {
+        font-size: 1.2rem;
         white-space: normal;
         max-width: 90vw;
         word-break: break-all;
-        line-height: 1.4;
-      }
-
-      .type-text {
-        display: none;
-      }
-
-      .type-break {
-        display: inline;
-      }
-
-      .btn-primary-custom,
-      .btn-secondary-custom {
-        padding: 8px 20px;
-        font-size: 0.9rem;
-      }
-
-      .tag {
-        font-size: 0.8rem;
-        padding: 4px 12px;
-      }
-
-      .container {
-        padding: 0 15px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .main-title {
-        font-size: 1rem;
         line-height: 1.5;
       }
 
-      .navbar-brand {
+      .hero-section {
+        min-height: 55vh;
+        padding: 60px 16px 40px;
+      }
+
+      .module-card {
+        padding: 20px 16px;
+      }
+
+      .btn-hero-primary,
+      .btn-hero-outline {
+        padding: 10px 24px;
+        font-size: 0.9rem;
+      }
+
+      .navbar-brand-custom {
         font-size: 1.1rem;
       }
     }
 
-    .btn-primary-custom {
-      background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
-      border: none;
-      border-radius: 8px;
-      padding: 10px 28px;
-      font-weight: 500;
-    }
-
-    .btn-secondary-custom {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      padding: 10px 28px;
-      color: #fff;
-      font-weight: 500;
-    }
-
-    .btn-secondary-custom:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-    }
-
-    .tag {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 6px 16px;
-      font-size: 0.9rem;
-      color: #ddd;
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 1rem;
+        line-height: 1.5;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- Particle Background -->
   <div class="particle-bg" id="particleBox"></div>
 
-  <nav class="navbar navbar-dark bg-transparent py-3">
-    <div class="container-fluid">
-      <span class="navbar-brand mb-0 h1">AlgoVisualized</span>
-      <div class="d-flex gap-3">
-        <button class="btn btn-link text-white p-0 fs-5">
-          <i class="bi bi-gear"></i>
-        </button>
-        <button class="btn btn-link text-white p-0 fs-5">
-          <i class="bi bi-github"></i>
-        </button>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3">
+    <div class="container">
+      <a class="navbar-brand navbar-brand-custom" href="index.html">
+        <i class="bi bi-cpu me-2"></i>AlgoVisualized
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 gap-2">
+          <li class="nav-item"><a class="nav-link" href="data_structure/index.html"><i class="bi bi-diagram-2 me-1"></i>数据结构</a></li>
+          <li class="nav-item"><a class="nav-link" href="sort/index.html"><i class="bi bi-bar-chart me-1"></i>排序算法</a></li>
+          <li class="nav-item"><a class="nav-link" href="search/index.html"><i class="bi bi-search me-1"></i>搜索算法</a></li>
+          <li class="nav-item"><a class="nav-link" href="dp/index.html"><i class="bi bi-grid-3x3 me-1"></i>动态规划</a></li>
+          <li class="nav-item"><a class="nav-link" href="graph_intro/index.html"><i class="bi bi-git me-1"></i>图论</a></li>
+          <li class="nav-item"><a class="nav-link" href="string/index.html"><i class="bi bi-type me-1"></i>字符串</a></li>
+        </ul>
       </div>
     </div>
   </nav>
 
-  <div class="container vh-100 d-flex flex-column justify-content-center align-items-center text-center">
-    <h1 class="main-title mb-5 fw-light">
-      <span id="typeText"></span>
-      <span class="cursor"></span>
-    </h1>
-
-    <div class="d-flex gap-4 mb-5 flex-wrap justify-content-center">
-      <button class="btn btn-primary-custom">
-        <a href="./data_structure/index.html" target="_blank" class="text-white text-decoration-none" role="button">
-          开始阅读
+  <!-- Hero -->
+  <section class="hero-section">
+    <div class="container">
+      <h1 class="hero-title fw-light">
+        <span id="typeText"></span>
+        <span class="cursor"></span>
+      </h1>
+      <p class="hero-subtitle">
+        覆盖排序、搜索、动态规划、图论、字符串等经典算法，<br class="d-none d-md-block">
+        提供 C++ / Java / Python 多语言代码与逐步可视化演示。
+      </p>
+      <div class="d-flex gap-3 justify-content-center flex-wrap">
+        <a href="sort/index.html" class="btn btn-hero-primary">
+          <i class="bi bi-play-fill me-1"></i>开始学习
         </a>
-      </button>
+        <a href="data_structure/index.html" class="btn btn-hero-outline">
+          <i class="bi bi-collection me-1"></i>数据结构
+        </a>
+      </div>
     </div>
+  </section>
 
-    <div class="d-flex flex-wrap gap-3 justify-content-center">
-      <span class="tag">C++ / Java / Python</span>
-      <span class="tag">模板 + 可视化</span>
+  <!-- Module Cards -->
+  <section class="modules-section">
+    <div class="container">
+      <h2 class="section-title">探索模块</h2>
+      <p class="section-subtitle">六大核心模块，从基础到进阶</p>
+      <div class="row g-4">
+        <div class="col-12 col-sm-6 col-lg-4">
+          <a href="sort/index.html" class="module-card">
+            <div class="module-icon icon-sort"><i class="bi bi-bar-chart"></i></div>
+            <h5>排序算法</h5>
+            <p>冒泡、选择、插入、希尔、快速、归并、堆、基数排序 — 8 种经典算法逐步可视化</p>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <a href="data_structure/index.html" class="module-card">
+            <div class="module-icon icon-ds"><i class="bi bi-diagram-2"></i></div>
+            <h5>数据结构</h5>
+            <p>数组、链表、栈、队列、树、二叉树、图 — 直观展示数据组织方式与操作过程</p>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <a href="search/index.html" class="module-card">
+            <div class="module-icon icon-search"><i class="bi bi-search"></i></div>
+            <h5>搜索算法</h5>
+            <p>线性搜索、二分搜索、哈希表、递归、DFS、BFS、回溯 — 全方位搜索策略</p>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <a href="dp/index.html" class="module-card">
+            <div class="module-icon icon-dp"><i class="bi bi-grid-3x3"></i></div>
+            <h5>动态规划</h5>
+            <p>记忆化搜索、LIS、01背包、TSP — 经典 DP 问题拆解与状态转移可视化</p>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <a href="graph_intro/index.html" class="module-card">
+            <div class="module-icon icon-graph"><i class="bi bi-git"></i></div>
+            <h5>图论</h5>
+            <p>Dijkstra 最短路径 — 图遍历与路径规划算法的直观呈现</p>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <a href="string/index.html" class="module-card">
+            <div class="module-icon icon-string"><i class="bi bi-type"></i></div>
+            <h5>字符串算法</h5>
+            <p>字符串哈希 — 高效字符串匹配与处理算法</p>
+          </a>
+        </div>
+      </div>
     </div>
+  </section>
+
+  <!-- Tech Tags -->
+  <div class="tech-tags">
+    <span class="tech-tag">C++</span>
+    <span class="tech-tag">Java</span>
+    <span class="tech-tag">Python</span>
+    <span class="tech-tag">Monaco Editor</span>
+    <span class="tech-tag">Canvas 可视化</span>
+    <span class="tech-tag">Vue 3</span>
+    <span class="tech-tag">Bootstrap 5</span>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; 2026 AlgoVisualized. </span>
+      <a href="https://github.com/Suzaku-Hyper-Dry" target="_blank"><i class="bi bi-github me-1"></i>GitHub</a>
+      <span class="mx-2">|</span>
+      <span>基于 Vue 3 + Monaco Editor + Bootstrap 5 构建</span>
+    </div>
+  </footer>
+
+  <script src="static/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // ========== Particle Background ==========
     const particleBox = document.getElementById('particleBox');
     const starCount = 60;
 
@@ -229,14 +457,17 @@
       particleBox.appendChild(star);
     }
 
+    // ========== Typewriter Effect ==========
     const targetText = 'AlgoVisualized，给你带来可视化的算法。';
     const textDom = document.getElementById('typeText');
     const cursorDom = document.querySelector('.cursor');
     let charIndex = 0;
     let isDelete = false;
+
     function isMobile() {
       return window.innerWidth <= 768;
     }
+
     function typeEffect() {
       if (isMobile()) {
         textDom.innerText = 'AlgoVisualized\n给你带来可视化的算法';
@@ -248,9 +479,7 @@
         textDom.innerText = targetText.slice(0, charIndex + 1);
         charIndex++;
         if (charIndex >= targetText.length) {
-          setTimeout(() => {
-            isDelete = true;
-          }, 1500);
+          setTimeout(() => { isDelete = true; }, 1500);
         }
       } else {
         textDom.innerText = targetText.slice(0, charIndex - 1);

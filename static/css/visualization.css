@@ -179,6 +179,67 @@ canvas {
     border-color: rgba(34, 197, 94, 0.3);
 }
 
+/* Array cell states */
+.badge-accessed::before {
+    background: #f59e0b;
+}
+
+.badge-accessed {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fcd34d;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.badge-inserted::before {
+    background: #22c55e;
+}
+
+.badge-inserted {
+    background: rgba(34, 197, 94, 0.15);
+    color: #86efac;
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.badge-deleted-cell::before {
+    background: #ef4444;
+}
+
+.badge-deleted-cell {
+    background: rgba(239, 68, 68, 0.15);
+    color: #fca5a5;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.badge-shifted::before {
+    background: #8b5cf6;
+}
+
+.badge-shifted {
+    background: rgba(139, 92, 246, 0.15);
+    color: #c4b5fd;
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+.badge-found::before {
+    background: #22c55e;
+}
+
+.badge-found {
+    background: rgba(34, 197, 94, 0.15);
+    color: #86efac;
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.badge-not-found::before {
+    background: #64748b;
+}
+
+.badge-not-found {
+    background: rgba(100, 116, 139, 0.15);
+    color: #94a3b8;
+    border-color: rgba(100, 116, 139, 0.3);
+}
+
 @media (max-width: 768px) {
     .visualization-section {
         padding: 16px;

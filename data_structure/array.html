@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../static/bootstrap-5.3.8-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../static/bootstrap-icons-1.13.1/bootstrap-icons.min.css">
   <link rel="stylesheet" href="../static/css/common.css">
+  <link rel="stylesheet" href="../static/css/visualization.css">
 
 </head>
 
@@ -125,7 +126,127 @@
       <!-- Content -->
       <main class="main flex-fill p-4 overflow-auto">
         <div class="mx-auto" style="max-width: 48rem;">
-          <article><h1>数组</h1></article>
+          <article>
+            <h1 class="mb-4">数组</h1>
+
+            <p class="lead mb-4">数组（Array）是最基本的数据结构，它将相同类型的元素存储在<strong>连续</strong>的内存空间中。每个元素可以通过<strong>下标（索引）</strong>直接访问，这使得数组的随机访问时间复杂度为 O(1)。</p>
+
+            <h2 class="mt-5 mb-3">核心特性</h2>
+            <ul class="mb-4">
+              <li class="mb-2"><span class="fw-bold">连续存储</span>：所有元素在内存中连续存放，支持 CPU 缓存局部性优化</li>
+              <li class="mb-2"><span class="fw-bold">O(1) 随机访问</span>：通过 `首地址 + 索引 × 元素大小` 公式直接定位</li>
+              <li class="mb-2"><span class="fw-bold">固定容量</span>：静态数组大小不可变，动态数组需要扩容（如 Python list）</li>
+              <li class="mb-2"><span class="fw-bold">增删代价高</span>：插入/删除元素需要移动后续所有元素，O(n) 时间复杂度</li>
+            </ul>
+
+            <h2 class="mt-5 mb-3">基本操作复杂度</h2>
+            <div class="table-responsive mb-4">
+              <table class="table table-striped table-hover table-bordered align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>操作</th>
+                    <th>时间复杂度</th>
+                    <th>说明</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>随机访问</td>
+                    <td>O(1)</td>
+                    <td>通过下标直接计算地址，一步到位</td>
+                  </tr>
+                  <tr>
+                    <td>末尾插入</td>
+                    <td>O(1)</td>
+                    <td>无需移动元素（平摊）</td>
+                  </tr>
+                  <tr>
+                    <td>中间插入</td>
+                    <td>O(n)</td>
+                    <td>需要将后续元素后移</td>
+                  </tr>
+                  <tr>
+                    <td>删除元素</td>
+                    <td>O(n)</td>
+                    <td>需要将后续元素前移</td>
+                  </tr>
+                  <tr>
+                    <td>线性搜索</td>
+                    <td>O(n)</td>
+                    <td>最坏遍历整个数组</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 class="mt-5 mb-3">代码实现</h2>
+            <div class="code-block">
+              <div class="code-block__header">
+                <div class="code-block__tabs">
+                  <button class="code-block__tab" :class="{ 'code-block__tab--active': currentLang === 'cpp' }"
+                    @click="changeLanguage('cpp')">C++</button>
+                  <button class="code-block__tab" :class="{ 'code-block__tab--active': currentLang === 'java' }"
+                    @click="changeLanguage('java')">Java</button>
+                  <button class="code-block__tab" :class="{ 'code-block__tab--active': currentLang === 'python' }"
+                    @click="changeLanguage('python')">Python</button>
+                </div>
+                <button class="code-block__copy" :class="{ 'code-block__copy--copied': copySuccess }" @click="copyCode">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  {{ copySuccess ? '已复制' : '复制代码' }}
+                </button>
+              </div>
+              <div class="code-block__content">
+                <div id="monaco-editor" style="width: 100%; height: 400px;"></div>
+              </div>
+            </div>
+
+            <h2 class="mt-5 mb-3">可视化演示</h2>
+            <div class="visualization-section">
+              <div class="visualization-header">
+                <div class="visualization-title">数组操作可视化</div>
+                <div class="visualization-controls">
+                  <div class="control-group">
+                    <label class="control-label">
+                      <input v-model="isAuto" type="radio" :value="true"> 自动运行
+                    </label>
+                    <label class="control-label">
+                      <input v-model="isAuto" type="radio" :value="false"> 单步运行
+                    </label>
+                  </div>
+                  <select class="form-select form-select-sm" v-model="opType" style="width: auto;">
+                    <option value="access">随机访问</option>
+                    <option value="insert">插入元素</option>
+                    <option value="delete">删除元素</option>
+                    <option value="search">搜索元素</option>
+                  </select>
+                  <button class="control-btn btn-primary" @click="startRun">开始</button>
+                  <button class="control-btn btn-secondary" @click="nextStep" :disabled="!canNextStep()">下一步</button>
+                  <button class="control-btn btn-danger" @click="resetAll">重置</button>
+                  <button class="control-btn btn-success" @click="shuffleArr">打乱</button>
+                  <div class="control-group">
+                    <span class="control-label">速度:</span>
+                    <input class="control-input" v-model.number="speed" type="range" min="50" max="1000">
+                    <span class="control-label">{{speed}}ms</span>
+                  </div>
+                </div>
+              </div>
+              <div class="canvas-container">
+                <canvas ref="canvas" width="800" height="180"></canvas>
+              </div>
+              <div class="info-badges">
+                <div class="info-badge badge-normal">普通元素</div>
+                <div class="info-badge badge-accessed">访问/目标</div>
+                <div class="info-badge badge-inserted">已插入</div>
+                <div class="info-badge badge-deleted-cell">待删除</div>
+                <div class="info-badge badge-shifted">移动中</div>
+                <div class="info-badge badge-found">搜索找到</div>
+              </div>
+            </div>
+          </article>
         </div>
       </main>
     </div>
@@ -186,12 +307,26 @@
   <!-- Vue 3 -->
   <script src="../static/vue/vue.global.prod.js"></script>
 
+  <!-- Monaco Editor -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+
   <!-- Common Vue Module -->
   <script src="../static/js/common-vue.js"></script>
 
+  <!-- Monaco Editor Wrapper Module -->
+  <script src="../static/js/monaco-editor.js"></script>
+
+  <!-- DS Visualizer Module -->
+  <script src="../static/js/data_structure/data_structure-visualizer.js"></script>
+
+  <!-- DS Code Library -->
+  <script src="../static/js/data_structure/data_structure-code.js"></script>
+
   <script>
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+
     document.addEventListener('DOMContentLoaded', function () {
-      const { createApp, ref } = Vue;
+      const { createApp, ref, onMounted, watch } = Vue;
       const { useCommonVue, headerItemsConfig, navItemsConfig, sidebarItemsConfig, footerItemsConfig, themeOptionsConfig } = window.AlgoCommonVue;
 
       createApp({
@@ -211,7 +346,6 @@
           } = useCommonVue();
 
           const currentPath = window.location.pathname;
-          const currentFileName = currentPath.split('/').pop();
           const headerItems = ref(JSON.parse(JSON.stringify(headerItemsConfig)));
           const navItems = ref(JSON.parse(JSON.stringify(navItemsConfig)));
           const sidebarItems = ref(JSON.parse(JSON.stringify(sidebarItemsConfig)));
@@ -238,6 +372,86 @@
             item.text = item.text.replace('../../', '');
           });
 
+          const currentLang = ref('cpp');
+          const copySuccess = ref(false);
+          const speed = ref(300);
+          const isAuto = ref(true);
+          const opType = ref('access');
+          const canvas = ref(null);
+
+          let editorModule = null;
+          let visualizerModule = null;
+
+          const changeLanguage = (lang) => {
+            currentLang.value = lang;
+            if (editorModule) {
+              editorModule.changeLanguage(lang, window.DSCodeLibrary.array[opType.value][lang]);
+            }
+          };
+
+          const updateCodeByOperation = (operation) => {
+            if (editorModule) {
+              editorModule.changeLanguage(currentLang.value, window.DSCodeLibrary.array[operation][currentLang.value]);
+            }
+          };
+
+          const copyCode = () => {
+            if (editorModule) {
+              editorModule.copyCode();
+            }
+          };
+
+          const shuffleArr = () => {
+            if (visualizerModule) {
+              visualizerModule.shuffleArr();
+            }
+          };
+
+          const canNextStep = () => {
+            if (isAuto.value) return false;
+            if (!visualizerModule) return false;
+            return visualizerModule.hasNextStep();
+          };
+
+          const resetAll = () => {
+            if (visualizerModule) {
+              visualizerModule.resetAll();
+            }
+            opType.value = 'access';
+            updateCodeByOperation('access');
+          };
+
+          const startRun = () => {
+            if (visualizerModule) {
+              updateCodeByOperation(opType.value);
+              visualizerModule.startRun(opType.value);
+            }
+          };
+
+          const nextStep = () => {
+            if (visualizerModule) {
+              visualizerModule.nextStep();
+            }
+          };
+
+          watch(speed, (newSpeed) => {
+            if (visualizerModule) {
+              visualizerModule.setSpeed(newSpeed);
+            }
+          });
+
+          watch(isAuto, (auto) => {
+            if (visualizerModule) {
+              visualizerModule.setAuto(auto);
+            }
+          });
+
+          watch(opType, (newOp) => {
+            updateCodeByOperation(newOp);
+            if (!isAuto.value && visualizerModule) {
+              visualizerModule.startRun(newOp);
+            }
+          });
 
           const isActiveNav = (href) => {
             if (!href) return false;
@@ -249,6 +463,24 @@
 
             return currentTail === hrefTail;
           };
+
+          onMounted(() => {
+            require(['vs/editor/editor.main'], function () {
+              editorModule = window.MonacoEditor.init({
+                containerId: 'monaco-editor',
+                code: window.DSCodeLibrary.array.access.cpp,
+                language: 'cpp',
+                copySuccess: copySuccess
+              });
+
+              visualizerModule = window.DSVisualizer.init({
+                canvas: canvas.value,
+                speed: speed.value,
+                isAuto: isAuto.value,
+                opType: opType
+              });
+            });
+          });
 
           return {
             sidebarHidden,
@@ -268,7 +500,20 @@
             scrollToTop,
             openThemeModal,
             closeThemeModal,
-            selectTheme
+            selectTheme,
+            currentLang,
+            copySuccess,
+            speed,
+            isAuto,
+            opType,
+            canvas,
+            changeLanguage,
+            copyCode,
+            shuffleArr,
+            resetAll,
+            startRun,
+            nextStep,
+            canNextStep
           };
         }
       }).mount('#app');

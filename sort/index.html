@@ -9,6 +9,13 @@
   <link rel="stylesheet" href="../static/bootstrap-5.3.8-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../static/bootstrap-icons-1.13.1/bootstrap-icons.min.css">
   <link rel="stylesheet" href="../static/css/common.css">
+  <style>
+    .algo-card:hover {
+      transform: translateY(-4px) !important;
+      box-shadow: 0 8px 30px rgba(79, 172, 254, 0.15) !important;
+      border-color: rgba(79, 172, 254, 0.35) !important;
+    }
+  </style>
 
 </head>
 
@@ -125,135 +132,343 @@
 
       <!-- Content -->
       <main class="main flex-fill p-4 overflow-auto">
-        <div class="mx-auto" style="max-width: 48rem;">
-          <article>
-            <h1>排序算法详解</h1>
+        <div style="max-width: 64rem; margin: 0 auto;">
 
-            <p>排序算法是计算机科学中最基础、最重要的算法之一，它将无序的数据按照指定规则重新排列，应用场景十分广泛。</p>
-
-            <h2>排序算法学习目标</h2>
-            <ul>
-              <li>掌握各类排序原理，理解代码实现逻辑</li>
-              <li>熟悉排序性能优劣</li>
-              <li>为算法学习提供可视化、动态演示支撑</li>
-            </ul>
-
-            <h2>排序算法分类</h2>
-
-            <h3>1. 比较类排序</h3>
-            <p>通过元素之间相互比较实现排序，平均时间复杂度多为 O(n log n)。</p>
-            <ul>
-              <li><strong>交换排序</strong>：冒泡排序、快速排序</li>
-              <li><strong>选择排序</strong>：简单选择排序、堆排序</li>
-              <li><strong>插入排序</strong>：直接插入排序、希尔排序</li>
-              <li><strong>归并排序</strong>：多路归并排序</li>
-            </ul>
-
-            <h3>2. 非比较类排序</h3>
-            <p>不依靠元素比较完成排序，时间复杂度可达到O(n)。</p>
-            <ul>
-              <li><strong>计数排序</strong>：桶位统计</li>
-              <li><strong>基数排序</strong>：多轮分桶</li>
-              <li><strong>桶排序</strong>：分区桶排序</li>
-            </ul>
-
-            <h2>排序算法复杂度对照表</h2>
-            <div class="table-responsive">
-              <table class="table table-bordered align-middle mb-0">
-                <thead>
-                  <tr>
-                    <th>算法</th>
-                    <th>平均时间</th>
-                    <th>最坏时间</th>
-                    <th>空间复杂度</th>
-                    <th>稳定性</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td><a href="bubble_sort.html">冒泡排序</a></td>
-                    <td>O(n²)</td>
-                    <td>O(n²)</td>
-                    <td>O(1)</td>
-                    <td><span class="badge bg-success">稳定</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="selection_sort.html">选择排序</a></td>
-                    <td>O(n²)</td>
-                    <td>O(n²)</td>
-                    <td>O(1)</td>
-                    <td><span class="badge bg-danger">不稳定</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="insertion_sort.html">插入排序</a></td>
-                    <td>O(n²)</td>
-                    <td>O(n²)</td>
-                    <td>O(1)</td>
-                    <td><span class="badge bg-success">稳定</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="shell_sort.html">希尔排序</a></td>
-                    <td>O(n log n)</td>
-                    <td>O(n²)</td>
-                    <td>O(1)</td>
-                    <td><span class="badge bg-danger">不稳定</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="quick_sort.html">快速排序</a></td>
-                    <td>O(n log n)</td>
-                    <td>O(n²)</td>
-                    <td>O(log n)</td>
-                    <td><span class="badge bg-danger">不稳定</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="merge_sort.html">归并排序</a></td>
-                    <td>O(n log n)</td>
-                    <td>O(n log n)</td>
-                    <td>O(n)</td>
-                    <td><span class="badge bg-success">稳定</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="heap_sort.html">堆排序</a></td>
-                    <td>O(n log n)</td>
-                    <td>O(n log n)</td>
-                    <td>O(1)</td>
-                    <td><span class="badge bg-danger">不稳定</span></td>
-                  </tr>
-                  <tr>
-                    <td><a href="radix_sort.html">基数排序</a></td>
-                    <td>O(d(n+r))</td>
-                    <td>O(d(n+r))</td>
-                    <td>O(n+r)</td>
-                    <td><span class="badge bg-success">稳定</span></td>
-                  </tr>
-                </tbody>
-              </table>
+          <!-- Hero Banner -->
+          <div class="rounded-4 p-4 p-md-5 mb-5 text-center"
+            style="background: linear-gradient(135deg, rgba(79,172,254,0.12), rgba(0,242,254,0.06)); border: 1px solid rgba(79,172,254,0.15);">
+            <div class="mb-3">
+              <i class="bi bi-bar-chart-fill fs-1" style="color: #4facfe;"></i>
             </div>
+            <h1 class="fw-bold mb-3" style="font-size: clamp(1.5rem, 4vw, 2.2rem);">排序算法详解</h1>
+            <p class="mb-0 mx-auto"
+              style="max-width: 540px; color: var(--text-lighter); font-size: 0.95rem; line-height: 1.7;">
+              排序是计算机科学中最基础的算法之一。从简单的冒泡到高效的分治，掌握排序算法是构建算法思维的第一步。
+            </p>
+          </div>
 
-            <h2>算法选择建议</h2>
-            <ul>
-              <li><strong>小规模数据</strong>：优先使用冒泡、插入排序，实现简单</li>
-              <li><strong>中等规模数据</strong>：优先使用快速排序，综合性能优秀</li>
-              <li><strong>大规模数据</strong>：归并排序，稳定且最坏表现良好</li>
-              <li><strong>线性时间需求</strong>：选用非比较排序，达到 O(n) 效率</li>
-              <li><strong>外部排序</strong>：归并排序适合处理海量外存数据</li>
-              <li><strong>已知数据范围</strong>：优先计数、基数、桶排序</li>
-            </ul>
+          <!-- Category Cards -->
+          <div class="row g-4 mb-5">
+            <div class="col-md-6">
+              <div class="rounded-3 p-4 h-100"
+                style="background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.15);">
+                <h3 class="fs-5 fw-semibold mb-2"><i class="bi bi-arrow-left-right me-2"
+                    style="color: #22c55e;"></i>比较类排序</h3>
+                <p class="mb-2" style="color: var(--text-lighter); font-size: 0.88rem;">通过元素间比较决定顺序，平均时间复杂度 O(n log n) ~
+                  O(n²)。</p>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                  <span class="badge rounded-pill px-3 py-2"
+                    style="background: rgba(79,172,254,0.15); color: #4facfe;">交换排序</span>
+                  <span class="badge rounded-pill px-3 py-2"
+                    style="background: rgba(245,158,11,0.15); color: #f59e0b;">选择排序</span>
+                  <span class="badge rounded-pill px-3 py-2"
+                    style="background: rgba(34,197,94,0.15); color: #22c55e;">插入排序</span>
+                  <span class="badge rounded-pill px-3 py-2"
+                    style="background: rgba(168,85,247,0.15); color: #a855f7;">归并排序</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="rounded-3 p-4 h-100"
+                style="background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.15);">
+                <h3 class="fs-5 fw-semibold mb-2"><i class="bi bi-speedometer2 me-2" style="color: #f59e0b;"></i>非比较类排序
+                </h3>
+                <p class="mb-2" style="color: var(--text-lighter); font-size: 0.88rem;">不依赖元素比较，利用数据特性进行排序，时间复杂度可达 O(n)。
+                </p>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                  <span class="badge rounded-pill px-3 py-2"
+                    style="background: rgba(239,68,68,0.15); color: #ef4444;">计数排序</span>
+                  <span class="badge rounded-pill px-3 py-2"
+                    style="background: rgba(59,130,246,0.15); color: #3b82f6;">基数排序</span>
+                  <span class="badge rounded-pill px-3 py-2"
+                    style="background: rgba(236,72,153,0.15); color: #ec4899;">桶排序</span>
+                </div>
+              </div>
+            </div>
+          </div>
 
-            <h2>学习路线建议</h2>
-            <p>循序渐进学习各类排序</p>
-            <ol>
-              <li>冒泡排序 — 理解交换思想</li>
-              <li>选择排序 — 每次选出最小元素</li>
-              <li>插入排序 — 将元素插入到正确位置</li>
-              <li>希尔排序 — 分组增量插入</li>
-              <li>快速排序 — 分治思想经典应用</li>
-              <li>归并排序 — 稳定分治排序</li>
-              <li>堆排序 — 结合堆数据结构</li>
-              <li>基数排序 — 非比较排序思路</li>
-            </ol>
+          <!-- Algorithm Cards -->
+          <h2 class="fw-bold mb-4 fs-4"><i class="bi bi-grid-3x3-gap me-2" style="color: #4facfe;"></i>算法一览</h2>
+          <div class="row g-4 mb-5">
+            <div class="col-12 col-sm-6 col-xl-3">
+              <a href="bubble_sort.html" class="text-decoration-none">
+                <div class="card h-100 border-1 rounded-3 algo-card"
+                  style="transition: transform 0.2s, box-shadow 0.2s;">
+                  <div class="card-body p-4 text-center">
+                    <div class="algo-icon rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center"
+                      style="width:48px;height:48px;background:rgba(79,172,254,0.15);">
+                      <i class="bi bi-1-circle fs-5" style="color:#4facfe;"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold mb-1">冒泡排序</h5>
+                    <small class="d-block mb-2" style="color: var(--text-lighter);">Bubble Sort</small>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                      <span class="badge rounded-pill px-2 py-1"
+                        style="background:rgba(255,255,255,0.06); font-weight:400;">O(n²)</span>
+                      <span class="badge bg-success rounded-pill px-2 py-1">稳定</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <a href="selection_sort.html" class="text-decoration-none">
+                <div class="card h-100 border-1 rounded-3 algo-card"
+                  style="transition: transform 0.2s, box-shadow 0.2s;">
+                  <div class="card-body p-4 text-center">
+                    <div class="algo-icon rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center"
+                      style="width:48px;height:48px;background:rgba(245,158,11,0.15);">
+                      <i class="bi bi-2-circle fs-5" style="color:#f59e0b;"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold mb-1">选择排序</h5>
+                    <small class="d-block mb-2" style="color: var(--text-lighter);">Selection Sort</small>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                      <span class="badge rounded-pill px-2 py-1"
+                        style="background:rgba(255,255,255,0.06); font-weight:400;">O(n²)</span>
+                      <span class="badge bg-danger rounded-pill px-2 py-1">不稳定</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <a href="insertion_sort.html" class="text-decoration-none">
+                <div class="card h-100 border-1 rounded-3 algo-card"
+                  style="transition: transform 0.2s, box-shadow 0.2s;">
+                  <div class="card-body p-4 text-center">
+                    <div class="algo-icon rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center"
+                      style="width:48px;height:48px;background:rgba(34,197,94,0.15);">
+                      <i class="bi bi-3-circle fs-5" style="color:#22c55e;"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold mb-1">插入排序</h5>
+                    <small class="d-block mb-2" style="color: var(--text-lighter);">Insertion Sort</small>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                      <span class="badge rounded-pill px-2 py-1"
+                        style="background:rgba(255,255,255,0.06); font-weight:400;">O(n²)</span>
+                      <span class="badge bg-success rounded-pill px-2 py-1">稳定</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <a href="shell_sort.html" class="text-decoration-none">
+                <div class="card h-100 border-1 rounded-3 algo-card"
+                  style="transition: transform 0.2s, box-shadow 0.2s;">
+                  <div class="card-body p-4 text-center">
+                    <div class="algo-icon rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center"
+                      style="width:48px;height:48px;background:rgba(168,85,247,0.15);">
+                      <i class="bi bi-4-circle fs-5" style="color:#a855f7;"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold mb-1">希尔排序</h5>
+                    <small class="d-block mb-2" style="color: var(--text-lighter);">Shell Sort</small>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                      <span class="badge rounded-pill px-2 py-1"
+                        style="background:rgba(255,255,255,0.06); font-weight:400;">O(n log n)</span>
+                      <span class="badge bg-danger rounded-pill px-2 py-1">不稳定</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <a href="quick_sort.html" class="text-decoration-none">
+                <div class="card h-100 border-1 rounded-3 algo-card"
+                  style="transition: transform 0.2s, box-shadow 0.2s;">
+                  <div class="card-body p-4 text-center">
+                    <div class="algo-icon rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center"
+                      style="width:48px;height:48px;background:rgba(239,68,68,0.15);">
+                      <i class="bi bi-5-circle fs-5" style="color:#ef4444;"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold mb-1">快速排序</h5>
+                    <small class="d-block mb-2" style="color: var(--text-lighter);">Quick Sort</small>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                      <span class="badge rounded-pill px-2 py-1"
+                        style="background:rgba(255,255,255,0.06); font-weight:400;">O(n log n)</span>
+                      <span class="badge bg-danger rounded-pill px-2 py-1">不稳定</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <a href="merge_sort.html" class="text-decoration-none">
+                <div class="card h-100 border-1 rounded-3 algo-card"
+                  style="transition: transform 0.2s, box-shadow 0.2s;">
+                  <div class="card-body p-4 text-center">
+                    <div class="algo-icon rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center"
+                      style="width:48px;height:48px;background:rgba(59,130,246,0.15);">
+                      <i class="bi bi-6-circle fs-5" style="color:#3b82f6;"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold mb-1">归并排序</h5>
+                    <small class="d-block mb-2" style="color: var(--text-lighter);">Merge Sort</small>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                      <span class="badge rounded-pill px-2 py-1"
+                        style="background:rgba(255,255,255,0.06); font-weight:400;">O(n log n)</span>
+                      <span class="badge bg-success rounded-pill px-2 py-1">稳定</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <a href="heap_sort.html" class="text-decoration-none">
+                <div class="card h-100 border-1 rounded-3 algo-card"
+                  style="transition: transform 0.2s, box-shadow 0.2s;">
+                  <div class="card-body p-4 text-center">
+                    <div class="algo-icon rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center"
+                      style="width:48px;height:48px;background:rgba(236,72,153,0.15);">
+                      <i class="bi bi-7-circle fs-5" style="color:#ec4899;"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold mb-1">堆排序</h5>
+                    <small class="d-block mb-2" style="color: var(--text-lighter);">Heap Sort</small>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                      <span class="badge rounded-pill px-2 py-1"
+                        style="background:rgba(255,255,255,0.06); font-weight:400;">O(n log n)</span>
+                      <span class="badge bg-danger rounded-pill px-2 py-1">不稳定</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-12 col-sm-6 col-xl-3">
+              <a href="radix_sort.html" class="text-decoration-none">
+                <div class="card h-100 border-1 rounded-3 algo-card"
+                  style="transition: transform 0.2s, box-shadow 0.2s;">
+                  <div class="card-body p-4 text-center">
+                    <div class="algo-icon rounded-3 mx-auto mb-3 d-flex align-items-center justify-content-center"
+                      style="width:48px;height:48px;background:rgba(20,184,166,0.15);">
+                      <i class="bi bi-8-circle fs-5" style="color:#14b8a6;"></i>
+                    </div>
+                    <h5 class="card-title fw-semibold mb-1">基数排序</h5>
+                    <small class="d-block mb-2" style="color: var(--text-lighter);">Radix Sort</small>
+                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+                      <span class="badge rounded-pill px-2 py-1"
+                        style="background:rgba(255,255,255,0.06); font-weight:400;">O(nk)</span>
+                      <span class="badge bg-success rounded-pill px-2 py-1">稳定</span>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
 
-          </article>
+          <!-- Complexity Table -->
+          <h2 class="fw-bold mb-4 fs-4"><i class="bi bi-table me-2" style="color: #4facfe;"></i>复杂度对照</h2>
+          <div class="table-responsive mb-5">
+            <table class="table table-hover align-middle rounded-3 overflow-hidden" style="font-size: 0.9rem;">
+              <thead style="background: rgba(79,172,254,0.1);">
+                <tr>
+                  <th class="ps-4">算法</th>
+                  <th>平均时间</th>
+                  <th>最坏时间</th>
+                  <th>最好时间</th>
+                  <th>空间</th>
+                  <th class="text-center">稳定性</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="ps-4"><a href="bubble_sort.html" class="fw-medium">冒泡排序</a></td>
+                  <td>O(n²)</td>
+                  <td>O(n²)</td>
+                  <td>O(n)</td>
+                  <td>O(1)</td>
+                  <td class="text-center"><span class="badge bg-success rounded-pill">稳定</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4"><a href="selection_sort.html" class="fw-medium">选择排序</a></td>
+                  <td>O(n²)</td>
+                  <td>O(n²)</td>
+                  <td>O(n²)</td>
+                  <td>O(1)</td>
+                  <td class="text-center"><span class="badge bg-danger rounded-pill">不稳定</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4"><a href="insertion_sort.html" class="fw-medium">插入排序</a></td>
+                  <td>O(n²)</td>
+                  <td>O(n²)</td>
+                  <td>O(n)</td>
+                  <td>O(1)</td>
+                  <td class="text-center"><span class="badge bg-success rounded-pill">稳定</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4"><a href="shell_sort.html" class="fw-medium">希尔排序</a></td>
+                  <td>O(n log n)</td>
+                  <td>O(n²)</td>
+                  <td>O(n)</td>
+                  <td>O(1)</td>
+                  <td class="text-center"><span class="badge bg-danger rounded-pill">不稳定</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4"><a href="quick_sort.html" class="fw-medium">快速排序</a></td>
+                  <td>O(n log n)</td>
+                  <td>O(n²)</td>
+                  <td>O(n log n)</td>
+                  <td>O(log n)</td>
+                  <td class="text-center"><span class="badge bg-danger rounded-pill">不稳定</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4"><a href="merge_sort.html" class="fw-medium">归并排序</a></td>
+                  <td>O(n log n)</td>
+                  <td>O(n log n)</td>
+                  <td>O(n log n)</td>
+                  <td>O(n)</td>
+                  <td class="text-center"><span class="badge bg-success rounded-pill">稳定</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4"><a href="heap_sort.html" class="fw-medium">堆排序</a></td>
+                  <td>O(n log n)</td>
+                  <td>O(n log n)</td>
+                  <td>O(n log n)</td>
+                  <td>O(1)</td>
+                  <td class="text-center"><span class="badge bg-danger rounded-pill">不稳定</span></td>
+                </tr>
+                <tr>
+                  <td class="ps-4"><a href="radix_sort.html" class="fw-medium">基数排序</a></td>
+                  <td>O(d(n+r))</td>
+                  <td>O(d(n+r))</td>
+                  <td>O(d(n+r))</td>
+                  <td>O(n+r)</td>
+                  <td class="text-center"><span class="badge bg-success rounded-pill">稳定</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Tips Section -->
+          <div class="row g-4 mb-4">
+            <div class="col-lg-6">
+              <div class="rounded-3 p-4 h-100"
+                style="background: rgba(79,172,254,0.04); border: 1px solid rgba(79,172,254,0.1);">
+                <h3 class="fs-5 fw-semibold mb-3"><i class="bi bi-lightbulb me-2" style="color: #f59e0b;"></i>选择建议</h3>
+                <ul class="mb-0" style="font-size: 0.88rem; line-height: 2;">
+                  <li><strong>小数据量：</strong>插入排序 / 冒泡排序，实现简单</li>
+                  <li><strong>通用场景：</strong>快速排序，综合性能最优</li>
+                  <li><strong>需稳定性：</strong>归并排序，O(n log n) + 稳定</li>
+                  <li><strong>空间敏感：</strong>堆排序，O(1) 额外空间</li>
+                  <li><strong>线性时间：</strong>基数排序，O(nk) 非比较</li>
+                  <li><strong>外部排序：</strong>归并排序，适合海量外存数据</li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="rounded-3 p-4 h-100"
+                style="background: rgba(34,197,94,0.04); border: 1px solid rgba(34,197,94,0.1);">
+                <h3 class="fs-5 fw-semibold mb-3"><i class="bi bi-signpost-2 me-2" style="color: #22c55e;"></i>学习路线</h3>
+                <ol style="font-size: 0.88rem; line-height: 2; padding-left: 1.2rem;">
+                  <li><strong>冒泡排序</strong> — 理解交换思想</li>
+                  <li><strong>选择排序</strong> — 每次选出最小元素</li>
+                  <li><strong>插入排序</strong> — 将元素插入到正确位置</li>
+                  <li><strong>希尔排序</strong> — 分组增量插入</li>
+                  <li><strong>快速排序</strong> — 分治思想经典应用</li>
+                  <li><strong>归并排序</strong> — 稳定分治排序</li>
+                  <li><strong>堆排序</strong> — 结合堆数据结构</li>
+                  <li><strong>基数排序</strong> — 非比较排序思路</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
         </div>
       </main>
     </div>

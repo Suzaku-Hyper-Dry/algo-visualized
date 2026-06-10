@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="../static/bootstrap-5.3.8-dist/css/bootstrap.min.css">
   <link rel="stylesheet" href="../static/bootstrap-icons-1.13.1/bootstrap-icons.min.css">
   <link rel="stylesheet" href="../static/css/common.css">
+  <link rel="stylesheet" href="../static/css/visualization.css">
 
 </head>
 
@@ -125,7 +126,128 @@
       <!-- Content -->
       <main class="main flex-fill p-4 overflow-auto">
         <div class="mx-auto" style="max-width: 48rem;">
-          <article><h1>链表</h1></article>
+          <article>
+            <h1 class="mb-4">链表</h1>
+
+            <p class="lead mb-4">链表（Linked List）是一种<strong>动态</strong>的线性数据结构，由一系列<strong>节点（Node）</strong>组成。每个节点包含<strong>数据域</strong>和指向下一个节点的<strong>指针域</strong>，节点在内存中<strong>不必连续</strong>存储。链表通过指针串联，支持高效的插入和删除操作。</p>
+
+            <h2 class="mt-5 mb-3">核心特性</h2>
+            <ul class="mb-4">
+              <li class="mb-2"><span class="fw-bold">动态分配</span>：节点在堆上动态创建，无需预先分配连续内存空间</li>
+              <li class="mb-2"><span class="fw-bold">O(1) 头插/头删</span>：修改头指针即可，无需移动其他元素</li>
+              <li class="mb-2"><span class="fw-bold">指针串联</span>：每个节点通过 next 指针指向后继，尾节点指向 NULL</li>
+              <li class="mb-2"><span class="fw-bold">无法随机访问</span>：只能从头节点开始逐个遍历，访问第 k 个元素需要 O(k)</li>
+            </ul>
+
+            <h2 class="mt-5 mb-3">基本操作复杂度</h2>
+            <div class="table-responsive mb-4">
+              <table class="table table-striped table-hover table-bordered align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>操作</th>
+                    <th>时间复杂度</th>
+                    <th>说明</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>头插 / 头删</td>
+                    <td>O(1)</td>
+                    <td>仅需修改头指针，常数时间完成</td>
+                  </tr>
+                  <tr>
+                    <td>尾插 / 尾删</td>
+                    <td>O(n)</td>
+                    <td>需要遍历到尾部，线性时间</td>
+                  </tr>
+                  <tr>
+                    <td>中间插入 / 删除</td>
+                    <td>O(n)</td>
+                    <td>需要先遍历找到目标位置</td>
+                  </tr>
+                  <tr>
+                    <td>遍历</td>
+                    <td>O(n)</td>
+                    <td>从头到尾依次访问每个节点</td>
+                  </tr>
+                  <tr>
+                    <td>搜索</td>
+                    <td>O(n)</td>
+                    <td>最坏需遍历整个链表</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h2 class="mt-5 mb-3">代码实现</h2>
+            <div class="code-block">
+              <div class="code-block__header">
+                <div class="code-block__tabs">
+                  <button class="code-block__tab" :class="{ 'code-block__tab--active': currentLang === 'cpp' }"
+                    @click="changeLanguage('cpp')">C++</button>
+                  <button class="code-block__tab" :class="{ 'code-block__tab--active': currentLang === 'java' }"
+                    @click="changeLanguage('java')">Java</button>
+                  <button class="code-block__tab" :class="{ 'code-block__tab--active': currentLang === 'python' }"
+                    @click="changeLanguage('python')">Python</button>
+                </div>
+                <button class="code-block__copy" :class="{ 'code-block__copy--copied': copySuccess }" @click="copyCode">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="14" height="14" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  {{ copySuccess ? '已复制' : '复制代码' }}
+                </button>
+              </div>
+              <div class="code-block__content">
+                <div id="monaco-editor" style="width: 100%; height: 400px;"></div>
+              </div>
+            </div>
+
+            <h2 class="mt-5 mb-3">可视化演示</h2>
+            <div class="visualization-section">
+              <div class="visualization-header">
+                <div class="visualization-title">链表操作可视化</div>
+                <div class="visualization-controls">
+                  <div class="control-group">
+                    <label class="control-label">
+                      <input v-model="isAuto" type="radio" :value="true"> 自动运行
+                    </label>
+                    <label class="control-label">
+                      <input v-model="isAuto" type="radio" :value="false"> 单步运行
+                    </label>
+                  </div>
+                  <select class="form-select form-select-sm" v-model="opType" style="width: auto;">
+                    <option value="traverse">遍历</option>
+                    <option value="insert_head">头插</option>
+                    <option value="insert_tail">尾插</option>
+                    <option value="delete_head">头删</option>
+                    <option value="delete_tail">尾删</option>
+                    <option value="search">搜索</option>
+                  </select>
+                  <button class="control-btn btn-primary" @click="startRun">开始</button>
+                  <button class="control-btn btn-secondary" @click="nextStep" :disabled="!canNextStep()">下一步</button>
+                  <button class="control-btn btn-danger" @click="resetAll">重置</button>
+                  <button class="control-btn btn-success" @click="shuffleArr">打乱</button>
+                  <div class="control-group">
+                    <span class="control-label">速度:</span>
+                    <input class="control-input" v-model.number="speed" type="range" min="50" max="1000">
+                    <span class="control-label">{{speed}}ms</span>
+                  </div>
+                </div>
+              </div>
+              <div class="canvas-container">
+                <canvas ref="canvas" width="800" height="220"></canvas>
+              </div>
+              <div class="info-badges">
+                <div class="info-badge badge-normal">普通节点</div>
+                <div class="info-badge badge-compare1">遍历中</div>
+                <div class="info-badge badge-inserted">插入节点</div>
+                <div class="info-badge badge-deleted-cell">删除节点</div>
+                <div class="info-badge badge-found">搜索找到</div>
+              </div>
+            </div>
+          </article>
         </div>
       </main>
     </div>
@@ -186,12 +308,26 @@
   <!-- Vue 3 -->
   <script src="../static/vue/vue.global.prod.js"></script>
 
+  <!-- Monaco Editor -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+
   <!-- Common Vue Module -->
   <script src="../static/js/common-vue.js"></script>
 
+  <!-- Monaco Editor Wrapper Module -->
+  <script src="../static/js/monaco-editor.js"></script>
+
+  <!-- DS Visualizer Module -->
+  <script src="../static/js/data_structure/data_structure-visualizer.js"></script>
+
+  <!-- DS Code Library -->
+  <script src="../static/js/data_structure/data_structure-code.js"></script>
+
   <script>
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs' } });
+
     document.addEventListener('DOMContentLoaded', function () {
-      const { createApp, ref } = Vue;
+      const { createApp, ref, onMounted, watch } = Vue;
       const { useCommonVue, headerItemsConfig, navItemsConfig, sidebarItemsConfig, footerItemsConfig, themeOptionsConfig } = window.AlgoCommonVue;
 
       createApp({
@@ -211,7 +347,6 @@
           } = useCommonVue();
 
           const currentPath = window.location.pathname;
-          const currentFileName = currentPath.split('/').pop();
           const headerItems = ref(JSON.parse(JSON.stringify(headerItemsConfig)));
           const navItems = ref(JSON.parse(JSON.stringify(navItemsConfig)));
           const sidebarItems = ref(JSON.parse(JSON.stringify(sidebarItemsConfig)));
@@ -238,6 +373,86 @@
             item.text = item.text.replace('../../', '');
           });
 
+          const currentLang = ref('cpp');
+          const copySuccess = ref(false);
+          const speed = ref(400);
+          const isAuto = ref(true);
+          const opType = ref('traverse');
+          const canvas = ref(null);
+
+          let editorModule = null;
+          let visualizerModule = null;
+
+          const changeLanguage = (lang) => {
+            currentLang.value = lang;
+            if (editorModule) {
+              editorModule.changeLanguage(lang, window.DSCodeLibrary.linkedList[opType.value][lang]);
+            }
+          };
+
+          const updateCodeByOperation = (operation) => {
+            if (editorModule) {
+              editorModule.changeLanguage(currentLang.value, window.DSCodeLibrary.linkedList[operation][currentLang.value]);
+            }
+          };
+
+          const copyCode = () => {
+            if (editorModule) {
+              editorModule.copyCode();
+            }
+          };
+
+          const shuffleArr = () => {
+            if (visualizerModule) {
+              visualizerModule.shuffleArr();
+            }
+          };
+
+          const canNextStep = () => {
+            if (isAuto.value) return false;
+            if (!visualizerModule) return false;
+            return visualizerModule.hasNextStep();
+          };
+
+          const resetAll = () => {
+            if (visualizerModule) {
+              visualizerModule.resetAll();
+            }
+            opType.value = 'traverse';
+            updateCodeByOperation('traverse');
+          };
+
+          const startRun = () => {
+            if (visualizerModule) {
+              updateCodeByOperation(opType.value);
+              visualizerModule.startRun(opType.value);
+            }
+          };
+
+          const nextStep = () => {
+            if (visualizerModule) {
+              visualizerModule.nextStep();
+            }
+          };
+
+          watch(speed, (newSpeed) => {
+            if (visualizerModule) {
+              visualizerModule.setSpeed(newSpeed);
+            }
+          });
+
+          watch(isAuto, (auto) => {
+            if (visualizerModule) {
+              visualizerModule.setAuto(auto);
+            }
+          });
+
+          watch(opType, (newOp) => {
+            updateCodeByOperation(newOp);
+            if (!isAuto.value && visualizerModule) {
+              visualizerModule.startRun(newOp);
+            }
+          });
 
           const isActiveNav = (href) => {
             if (!href) return false;
@@ -249,6 +464,24 @@
 
             return currentTail === hrefTail;
           };
+
+          onMounted(() => {
+            require(['vs/editor/editor.main'], function () {
+              editorModule = window.MonacoEditor.init({
+                containerId: 'monaco-editor',
+                code: window.DSCodeLibrary.linkedList.traverse.cpp,
+                language: 'cpp',
+                copySuccess: copySuccess
+              });
+
+              visualizerModule = window.DSVisualizer.initLinkedList({
+                canvas: canvas.value,
+                speed: speed.value,
+                isAuto: isAuto.value,
+                opType: opType
+              });
+            });
+          });
 
           return {
             sidebarHidden,
@@ -268,7 +501,20 @@
             scrollToTop,
             openThemeModal,
             closeThemeModal,
-            selectTheme
+            selectTheme,
+            currentLang,
+            copySuccess,
+            speed,
+            isAuto,
+            opType,
+            canvas,
+            changeLanguage,
+            copyCode,
+            shuffleArr,
+            resetAll,
+            startRun,
+            nextStep,
+            canNextStep
           };
         }
       }).mount('#app');

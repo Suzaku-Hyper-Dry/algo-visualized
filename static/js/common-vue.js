@@ -342,7 +342,7 @@ const sidebarItemsConfig = [
 const footerItemsConfig = [
   {
     id: 'copyright',
-    text: 'Copyright &copy; <a href="https://github.com/Suzaku-Hyper-Dry">github</a>&<a href="https://gitee.com/Suzakuhyperdry">Gitee</a>:SuzakuHyperDry',
+    text: 'Copyright &copy; <a href="https://github.com/Suzaku-Hyper-Dry" target="_blank"><i class="bi bi-github me-1"></i>GitHub</a>&<a href="https://gitee.com/Suzakuhyperdry">Gitee</a>:SuzakuHyperDry',
     divider: true
   },
   {
